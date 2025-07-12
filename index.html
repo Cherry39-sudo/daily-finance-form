@@ -10,13 +10,14 @@
       padding: 20px;
       background: #f9fafb;
     }
-    form {
+    form, .records {
       background: white;
       padding: 20px;
       border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       max-width: 400px;
       margin: auto;
+      margin-bottom: 20px;
     }
     label {
       display: block;
@@ -39,6 +40,23 @@
     }
     button:hover {
       background-color: #4338ca;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f3f4f6;
+    }
+    .delete-btn {
+      color: red;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -76,13 +94,57 @@
     <button type="submit">送出</button>
   </form>
 
+  <div class="records">
+    <h3>輸入紀錄</h3>
+    <table id="recordsTable">
+      <thead>
+        <tr>
+          <th>日期</th><th>時間</th><th>項目</th><th>金額</th><th>分類</th><th>支付</th><th>操作</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button onclick="generatePDF()">匯出 PDF</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
+    const records = [];
+
     document.getElementById('transactionForm').addEventListener('submit', function(event) {
       event.preventDefault();
-      const data = Object.fromEntries(new FormData(event.target).entries());
-      alert(`已儲存：\n日期：${data.date}\n時間：${data.time}\n項目：${data.item}\n金額：${data.amount}\n類別：${data.category}\n支付方式：${data.payment}`);
-      event.target.reset();
+      const form = event.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+      records.push(data);
+      renderTable();
+      form.reset();
     });
+
+    function renderTable() {
+      const tbody = document.querySelector("#recordsTable tbody");
+      tbody.innerHTML = "";
+      records.forEach((r, i) => {
+        const row = `<tr><td>${r.date}</td><td>${r.time}</td><td>${r.item}</td><td>${r.amount}</td><td>${r.category}</td><td>${r.payment}</td><td><span class='delete-btn' onclick='deleteRow(${i})'>刪除</span></td></tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function deleteRow(index) {
+      records.splice(index, 1);
+      renderTable();
+    }
+
+    function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("每日收支紀錄", 10, 10);
+      let y = 20;
+      records.forEach((r, i) => {
+        doc.text(`${r.date} ${r.time}｜${r.item}｜${r.amount} 元｜${r.category}｜${r.payment}`, 10, y);
+        y += 10;
+      });
+      doc.save("daily-records.pdf");
+    }
   </script>
 </body>
 </html>
