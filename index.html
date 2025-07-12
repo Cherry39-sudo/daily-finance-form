@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日交易輸入表單</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9fafb;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+  </style>
+</head>
+<body>
+  <form id="transactionForm">
+    <label for="time">時間</label>
+    <input type="time" id="time" name="time" required />
+
+    <label for="item">項目名稱</label>
+    <input type="text" id="item" name="item" required />
+
+    <label for="amount">金額</label>
+    <input type="number" id="amount" name="amount" required />
+
+    <label for="category">類別</label>
+    <select id="category" name="category" required>
+      <option value="日常">日常</option>
+      <option value="工作">工作</option>
+      <option value="通勤">通勤</option>
+      <option value="採購">採購</option>
+      <option value="其他">其他</option>
+    </select>
+
+    <label for="payment">支付方式</label>
+    <select id="payment" name="payment" required>
+      <option value="現金">現金</option>
+      <option value="銀行帳本">銀行帳本</option>
+      <option value="信用卡">信用卡</option>
+      <option value="電子支付">電子支付</option>
+    </select>
+
+    <button type="submit">送出</button>
+  </form>
+
+  <script>
+    document.getElementById('transactionForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(event.target).entries());
+      alert(`已儲存：\\n時間：${data.time}\\n項目：${data.item}\\n金額：${data.amount}\\n類別：${data.category}\\n支付方式：${data.payment}`);
+      event.target.reset();
+    });
+  </script>
+</body>
+</html>
