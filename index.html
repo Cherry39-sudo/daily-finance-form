@@ -44,6 +44,9 @@
 </head>
 <body>
   <form id="transactionForm">
+    <label for="date">日期</label>
+    <input type="date" id="date" name="date" required />
+
     <label for="time">時間</label>
     <input type="time" id="time" name="time" required />
 
@@ -77,7 +80,7 @@
     document.getElementById('transactionForm').addEventListener('submit', function(event) {
       event.preventDefault();
       const data = Object.fromEntries(new FormData(event.target).entries());
-      alert(`已儲存：\\n時間：${data.time}\\n項目：${data.item}\\n金額：${data.amount}\\n類別：${data.category}\\n支付方式：${data.payment}`);
+      alert(`已儲存：\n日期：${data.date}\n時間：${data.time}\n項目：${data.item}\n金額：${data.amount}\n類別：${data.category}\n支付方式：${data.payment}`);
       event.target.reset();
     });
   </script>
